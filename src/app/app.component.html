@@ -1,0 +1,75 @@
+<div class="page-container">
+
+  <div class="main-card">
+
+    <h1 class="main-title">高雄市未來三天天氣概況</h1>
+
+    <div class="section-box">
+      <h3>📍 1. 請選擇查詢之行政區：</h3>
+      <div class="btn-group">
+        @for (wantLocation of WantLocations; track $index) {
+          <button
+            (click)="chooseLocation(wantLocation)"
+            [class.active]="chooseLocationName === wantLocation.LocationName">
+            {{ wantLocation.LocationName }}
+          </button>
+        }
+      </div>
+      @if (chooseLocationName) {
+        <p class="selection-tip">您已選擇: <span>{{ chooseLocationName }}</span></p>
+      }
+    </div>
+
+    <div class="section-box">
+      <h3>📊 2. 查詢該行政區的天氣指標：</h3>
+      @if(WantOption){
+        <div class="btn-group">
+          @for (wantElement of WantOption; track $index) {
+            <button
+              (click)="chooseOptions(wantElement)"
+              [class.active]="selectedOption?.ElementName === wantElement.ElementName">
+              {{ wantElement.ElementName }}
+            </button>
+          }
+        </div>
+        @if (selectedOption?.ElementName) {
+          <p class="selection-tip">您已選擇: <span>{{ selectedOption?.ElementName }}</span></p>
+        }
+      } @else {
+        <p class="waiting-text">（請先點選上方的行政區，才會出現欲查詢的天氣指標喔！）</p>
+      }
+    </div>
+
+    <div class="section-box result-box">
+      <h3>🌤️ 3. 查詢區域之天氣指標結果：</h3>
+      @if(selectedOption){
+        <h4 class="result-title">{{ chooseLocationName }} 的 {{ selectedOption?.ElementName }} 趨勢</h4>
+
+        <div class="report-list">
+          @for(data of timeDataOption; track $index) {
+            @if ($index < 3) {
+              <div class="report-item">
+                <span class="time-tag">⏱️ {{ data.DataTime }}</span>
+                <span class="value-text">
+                  @if (data?.ElementValue[0].Temperature) { 的溫度是 <strong>{{data?.ElementValue[0].Temperature}}°C</strong> }
+                  @if (data?.ElementValue[0].DewPoint) { 的露點溫度是 <strong>{{data?.ElementValue[0].DewPoint}}°C</strong> }
+                  @if (data?.ElementValue[0].RelativeHumidity) { 的相對溼度是 <strong>{{data?.ElementValue[0].RelativeHumidity}}%</strong> }
+                  @if (data?.ElementValue[0].ApparentTemperature) { 的體感溫度是 <strong>{{data?.ElementValue[0].ApparentTemperature}}°C</strong> }
+                  @if (data?.ElementValue[0].ComfortIndexDescription) { 的舒適度： <strong>{{data?.ElementValue[0].ComfortIndexDescription}}</strong> }
+                  @if (data?.ElementValue[0].BeaufortScale) { 的蒲福氏風級： <strong>{{data?.ElementValue[0].BeaufortScale}} 級</strong> }
+                  @if (data?.ElementValue[0].WindDirection) { 的風向是 <strong>{{data?.ElementValue[0].WindDirection}}</strong> }
+                  @if (data?.ElementValue[0].ProbabilityOfPrecipitation) { 的降雨機率是 <strong>{{data?.ElementValue[0].ProbabilityOfPrecipitation}}%</strong> }
+                  @if (data?.ElementValue[0].Weather) { 的天氣概述： <strong>{{data?.ElementValue[0].Weather}}</strong> }
+                  @if (data?.ElementValue[0].WeatherDescription) { 是 <strong>{{data?.ElementValue[0].WeatherDescription}}</strong> }
+                </span>
+              </div>
+            }
+          }
+        </div>
+      } @else {
+        <p class="waiting-text">（等待指標選擇中...）</p>
+      }
+    </div>
+
+  </div>
+</div>
